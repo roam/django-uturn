@@ -152,7 +152,10 @@ Change that to this::
 
 
 Don't worry if you don't want to use ``next`` as the parameter. You can 
-specify a custom parameter name with the ``UTURN_REDIRECT_PARAM`` setting.
+specify a custom parameter name with the ``UTURN_REDIRECT_PARAM`` setting. And
+if you want to redirect to other domains, you can specify those domains with
+the ``UTURN_ALLOWED_HOSTS`` setting. Otherwise requests to redirect to other
+domains will be ignored.
 
 
 Overriding URLs in templates

@@ -20,6 +20,7 @@ class GetRedirectUrlTest(TestCase):
 
     def tearDown(self):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'next')
+        setattr(settings, 'UTURN_ALLOWED_HOSTS', None)
 
     def test_none(self):
         self.assertTrue(get_redirect_url(GET()) is None)
@@ -43,6 +44,22 @@ class GetRedirectUrlTest(TestCase):
         request = GET({'next': 'google.com'})
         self.assertTrue(get_redirect_url(request) is None)
 
+    def test_whitelisted_domain(self):
+        setattr(settings, 'UTURN_ALLOWED_HOSTS', ['google.com'])
+        request = GET({'next': 'http://google.com'})
+        self.assertEquals('http://google.com', get_redirect_url(request))
+        # No prefix means google.com is interpreted as a path, not a domain
+        request = GET({'next': 'google.com'})
+        self.assertTrue(get_redirect_url(request) is None)
+        # A protocol relative URL however, will have the domain compared
+        # against our whitelist
+        request = GET({'next': '//google.com'})
+        self.assertEquals('//google.com', get_redirect_url(request))
+        request = GET({'next': '//agoogle.com'})
+        self.assertTrue(get_redirect_url(request) is None)
+        request = GET({'next': 'http://agoogle.com'})
+        self.assertTrue(get_redirect_url(request) is None)
+
     def test_relative_only_param_changed(self):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'uturn')
         request = GET({'uturn': 'http://google.com'})
@@ -55,6 +72,7 @@ class RedirectTestCase(TestCase):
 
     def tearDown(self):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'next')
+        setattr(settings, 'UTURN_ALLOWED_HOSTS', None)
 
     def redirect(self, request, to):
         response = smart_redirect(request, to)
@@ -85,6 +103,24 @@ class RedirectTestCase(TestCase):
     def relative_only_param_changed(self, method=GET):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'uturn')
         self.relative_only('uturn', method)
+
+    def whitelisted_domain(self, method=GET):
+        domains = ['google.com', 'twitter.com']
+        setattr(settings, 'UTURN_ALLOWED_HOSTS', domains)
+        for domain in domains:
+            request = method({'next': 'http://' + domain})
+            self.assertEquals('http://' + domain, get_redirect_url(request))
+            # No prefix means the domain is interpreted as a path, not a domain
+            request = method({'next': domain})
+            self.assertTrue(get_redirect_url(request) is None)
+            # A protocol relative URL however, will have the domain compared
+            # against our whitelist
+            request = method({'next': '//' + domain})
+            self.assertEquals('//' + domain, get_redirect_url(request))
+            request = method({'next': '//a' + domain})
+            self.assertTrue(get_redirect_url(request) is None)
+            request = method({'next': 'http://a' + domain})
+            self.assertTrue(get_redirect_url(request) is None)
 
 
 class SmartRedirectTest(RedirectTestCase):
@@ -124,6 +160,12 @@ class SmartRedirectTest(RedirectTestCase):
 
     def test_relative_only_param_changed_post(self):
         self.relative_only_param_changed(method=POST)
+
+    def test_whitelisted_domain(self):
+        self.whitelisted_domain()
+
+    def test_whitelisted_domain_post(self):
+        self.whitelisted_domain(method=POST)
 
 
 class SmartHttpResponseRedirectTest(RedirectTestCase):
@@ -167,3 +209,9 @@ class SmartHttpResponseRedirectTest(RedirectTestCase):
 
     def test_relative_only_param_changed_post(self):
         self.relative_only_param_changed(method=POST)
+
+    def test_whitelisted_domain(self):
+        self.whitelisted_domain()
+
+    def test_whitelisted_domain_post(self):
+        self.whitelisted_domain(method=POST)

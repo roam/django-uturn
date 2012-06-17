@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import urlparse
+
 from django.shortcuts import redirect as core_redirect
 from django.http import HttpResponseRedirect
 from django.utils.encoding import iri_to_uri
@@ -18,8 +20,10 @@ def get_redirect_url(request):
     relative URL, it will be returned. In any other case, ``None`` is 
     returned.
 
-    Only relative URLs are allowed to prevent redirects to untrusted sites.
-    Have a look at `URL Redirection to Untrusted site 
+    Only URLs pointing to whitelisted domains (specified in the setting
+    ``UTURN_ALLOWED_HOSTS``) and the current domain are allowed to prevent 
+    redirects to untrusted sites. Have a look at 
+    `URL Redirection to Untrusted site 
     <http://cwe.mitre.org/data/definitions/601.html>`_ to discover the risks
     involved.
 
@@ -32,8 +36,18 @@ def get_redirect_url(request):
         next = request.GET.get(param, None)
     elif request.method == 'POST':
         next = request.POST.get(param, None)
+    if not next:
+        return None
+    # Check if it's an absolute URL.
+    allowed_hosts = getattr(settings, 'UTURN_ALLOWED_HOSTS', None)
+    allowed_hosts = allowed_hosts if allowed_hosts else [request.get_host()]
+    host = urlparse.urlparse(next)[1]
+    if host:
+        # Make sure the absolute URL points to an allowed host, otherwise 
+        # ignore the value.
+        return next if host in allowed_hosts else None
     # Make sure it's a relative URL to prevent "open redirects"
-    return next if next and next.startswith('/') else None
+    return next if next.startswith('/') else None
 
 
 def smart_redirect(request, to, *args, **kwargs):
@@ -65,7 +79,9 @@ def smart_response(request, response):
     location = response.get('Location', None)
     if not location or response.status_code != 302:
         return response
-    response['Location'] = iri_to_uri(location)
+    next = get_redirect_url(request)
+    if next:
+        response['Location'] = iri_to_uri(next)
     return response
 
 
