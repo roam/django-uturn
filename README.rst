@@ -135,7 +135,7 @@ The easy way to add the parameter to your forms is by adding the
 Django's builtin CSRF protection, you'll already have something like this::
 
     <form action="." method="post">
-        {% form.as_p %}
+        {{ form.as_p }}
         {% csrf_token %}
         <input type="submit" value="Save">
     </form>
@@ -143,7 +143,7 @@ Django's builtin CSRF protection, you'll already have something like this::
 Change that to this::
 
     <form action="." method="post">
-        {% form.as_p %}
+        {{ form.as_p }}
         {% csrf_token %}
         {% uturn_param %}
         <input type="submit" value="Save">
@@ -190,7 +190,8 @@ the ticket list page (with or without the ``next`` parameter)::
         <a href="/tickets/">cancel</a>
     </form>
 
-And here's what that same form would look like from the project page::
+And here's what that same form would look like when you reached it from the 
+project page::
 
     <form action="." method="post">
         ...
