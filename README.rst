@@ -14,9 +14,8 @@ requiring you to log in:
    ``/page-you-wanted-to-see`` rather than ``/``.
 
 With Uturn, you'll be able to use the same feature by simply changing some
-template tags and redirect responses.
+template code and adding middleware or decorators to your views.
 
-**Note: requires some more polishing and testing**
 
 Typical use cases
 -----------------
