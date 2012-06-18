@@ -12,7 +12,6 @@ setup(
     description='Overriding redirects in Django, to return where you came '\
                 'from',
     long_description=open('README.rst').read(),
-    zip_safe=False,
     classifiers = [
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
