@@ -1,0 +1,3 @@
+validate:
+	travis-lint
+	tox
