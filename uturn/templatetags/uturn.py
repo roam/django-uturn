@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from django import template
+from django import template, VERSION as django_version
 from django.template.defaulttags import URLNode
 from django.utils.http import urlencode
 from django.utils.html import conditional_escape
@@ -131,15 +131,25 @@ def do_uturn(parser, token):
     return UturnUrlNode(node)
 
 
-@register.simple_tag(takes_context=True)
-def uturn_param(context):
-    request = context.get('request', None)
+def _do_uturn_param(request):
     next = get_redirect_url(request)
     if next:
         attr = {
             'param': conditional_escape(param_name()),
             'value': conditional_escape(next)
         }
-        f = "<input type='hidden' name='%(name)s' value='%(value)s'>" % attr
+        f = "<input type='hidden' name='%(param)s' value='%(value)s'>" % attr
         return mark_safe("<div style='display:none'>%s</div>" % f)
-    return ''
+    return ''    
+
+
+# This is ugly stuff, but if this is all it takes to support Django 1.2, it'll
+# have to do.
+if django_version[:2] == (1, 2):
+    @register.simple_tag
+    def uturn_param(request):
+        return _do_uturn_param(request)
+else:
+    @register.simple_tag(takes_context=True)
+    def uturn_param(context):
+        return _do_uturn_param(context.get('request', None))

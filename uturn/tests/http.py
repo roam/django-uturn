@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
-from django.test.client import RequestFactory
 from django.conf import settings
+try:
+    # When running Django 1.3+
+    from django.test.client import RequestFactory
+except ImportError:
+    from request_factory import RequestFactory
 
 from ..http import get_redirect_url, smart_redirect, SmartHttpResponseRedirect
 
@@ -21,6 +25,7 @@ class GetRedirectUrlTest(TestCase):
     def tearDown(self):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'next')
         setattr(settings, 'UTURN_ALLOWED_HOSTS', None)
+        super(GetRedirectUrlTest, self).tearDown()
 
     def test_none(self):
         self.assertTrue(get_redirect_url(GET()) is None)
@@ -73,6 +78,7 @@ class RedirectTestCase(TestCase):
     def tearDown(self):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'next')
         setattr(settings, 'UTURN_ALLOWED_HOSTS', None)
+        super(RedirectTestCase, self).tearDown()
 
     def redirect(self, request, to):
         response = smart_redirect(request, to)

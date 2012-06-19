@@ -19,6 +19,7 @@ def optional_redirect(request, redirect=None):
 class UturnMiddlewareTest(TestCase):
 
     def setUp(self):
+        super(UturnMiddlewareTest, self).setUp()
         self.middleware = UturnMiddleware()
 
     def request(self, request, redirect=None):

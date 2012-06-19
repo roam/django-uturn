@@ -16,6 +16,20 @@ requiring you to log in:
 With Uturn, you'll be able to use the same feature by simply changing some
 template code and adding middleware or decorators to your views.
 
+----
+
+Installation
+------------
+django-uturn is available on Pypi::
+
+    pip install django-uturn
+
+Uturn is currently tested against Django versions 1.2, 1.3 and 1.4.
+
+.. image:: https://secure.travis-ci.org/roam/django-uturn.png?branch=master
+
+
+----
 
 Typical use cases
 -----------------
@@ -149,8 +163,16 @@ Change that to this::
         <input type="submit" value="Save">
     </form>
 
+**Note:** if you're using **Django 1.2**, you will have to pass the request::
 
-Don't worry if you don't want to use ``next`` as the parameter. You can 
+    <form action="." method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        {% uturn_param request %}
+        <input type="submit" value="Save">
+    </form>
+
+Don't worry if you *don't* want to use ``next`` as the parameter. You can 
 specify a custom parameter name with the ``UTURN_REDIRECT_PARAM`` setting. And
 if you want to redirect to other domains, you can specify those domains with
 the ``UTURN_ALLOWED_HOSTS`` setting. Otherwise requests to redirect to other
@@ -198,3 +220,9 @@ project page::
         <input type="submit" value="Save"> or 
         <a href="/projects/">cancel</a>
     </form>
+
+
+----
+
+Thanks to `django-cms <https://github.com/divio/django-cms/>`_ for the 
+backported implementation of ``RequestFactory``.
