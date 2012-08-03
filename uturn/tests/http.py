@@ -72,6 +72,24 @@ class GetRedirectUrlTest(TestCase):
         request = GET({'uturn': 'google.com'})
         self.assertTrue(get_redirect_url(request) is None)
 
+    def test_data_url(self):
+        data_url = 'data:text/html,<script>window.alert("xss")</script>'
+        request = GET({'next': data_url})
+        self.assertTrue(get_redirect_url(request) is None)
+
+    def test_file_url(self):
+        request = GET({'next': 'file:///etc/passwd'})
+        self.assertTrue(get_redirect_url(request) is None)
+
+    def test_mailto_url(self):
+        request = GET({'next': 'mailto:test@example.com'})
+        self.assertTrue(get_redirect_url(request) is None)
+
+    def test_mailto_url_whitelisted_domain(self):
+        setattr(settings, 'UTURN_ALLOWED_HOSTS', ['example.com'])
+        request = GET({'next': 'mailto:test@example.com'})
+        self.assertTrue(get_redirect_url(request) is None)
+
 
 class RedirectTestCase(TestCase):
 
