@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.test import TestCase
 from django.http import HttpResponse, HttpResponseRedirect, \
                         HttpResponsePermanentRedirect
 
-from http import GET
+from .http import GET
 
 from ..middleware import UturnMiddleware
 
@@ -13,7 +14,7 @@ def optional_redirect(request, redirect=None):
         if redirect == '/permanent':
             return HttpResponsePermanentRedirect(redirect)
         return HttpResponseRedirect(redirect)
-    return HttpResponse('hi')
+    return HttpResponse(b'hi')
 
 
 class UturnMiddlewareTest(TestCase):
@@ -28,7 +29,7 @@ class UturnMiddlewareTest(TestCase):
 
     def test_normal_response(self):
         response = self.request(GET())
-        self.assertEqual('hi', response.content)
+        self.assertEqual(b'hi', response.content)
 
     def test_redirect_no_uturn(self):
         response = self.request(GET(), '/to-here')

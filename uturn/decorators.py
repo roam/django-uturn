@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from functools import wraps
-from http import smart_response
+from .http import smart_response
 
 
 def uturn(view):

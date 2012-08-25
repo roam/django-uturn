@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-import urlparse
+try:
+    import urlparse
+except ImportError:
+    # Python 3
+    import urllib.parse as urlparse
 
 from django.shortcuts import redirect as core_redirect
 from django.http import HttpResponseRedirect
@@ -14,16 +18,16 @@ def param_name():
 def get_redirect_url(request):
     """
     Retrieves the next URL from the request.
-    
-    The next URL parameter is identified by the ``UTURN_REDIRECT_PARAM``, 
+
+    The next URL parameter is identified by the ``UTURN_REDIRECT_PARAM``,
     which defaults to ``next``. If the parameter is present and is a
-    relative URL, it will be returned. In any other case, ``None`` is 
+    relative URL, it will be returned. In any other case, ``None`` is
     returned.
 
     Only URLs pointing to whitelisted domains (specified in the setting
-    ``UTURN_ALLOWED_HOSTS``) and the current domain are allowed to prevent 
-    redirects to untrusted sites. Have a look at 
-    `URL Redirection to Untrusted site 
+    ``UTURN_ALLOWED_HOSTS``) and the current domain are allowed to prevent
+    redirects to untrusted sites. Have a look at
+    `URL Redirection to Untrusted site
     <http://cwe.mitre.org/data/definitions/601.html>`_ to discover the risks
     involved.
 
@@ -43,7 +47,7 @@ def get_redirect_url(request):
     allowed_hosts = allowed_hosts if allowed_hosts else [request.get_host()]
     host = urlparse.urlparse(next)[1]
     if host:
-        # Make sure the absolute URL points to an allowed host, otherwise 
+        # Make sure the absolute URL points to an allowed host, otherwise
         # ignore the value.
         return next if host in allowed_hosts else None
     # Make sure it's a relative URL to prevent "open redirects"
@@ -54,7 +58,7 @@ def smart_redirect(request, to, *args, **kwargs):
     """
     Either redirects the user like Django's ``redirect`` shortcut would, or
     in case a redirect url is present, redirects to that instead.
-    
+
     The next parameter takes precedence.
 
     """
@@ -68,9 +72,9 @@ def smart_response(request, response):
     """
     Reissues a redirect when necessary - leaves other response alone.
 
-    The response is examined; in case it's a temporary redirect and a 
-    redirect alternative is specified in the request, a new redirect is 
-    constructed targeting the alternative. In all other cases, the response 
+    The response is examined; in case it's a temporary redirect and a
+    redirect alternative is specified in the request, a new redirect is
+    constructed targeting the alternative. In all other cases, the response
     is returned as is.
 
     """
@@ -89,7 +93,7 @@ class SmartHttpResponseRedirect(HttpResponseRedirect):
     """
     Acts like Django's regular ``HttpResponseRedirect``, unless a redirect
     alternative is discovered in the request parameters.
-    
+
     """
 
     def __init__(self, request, redirect_to):

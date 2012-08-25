@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.template import Template, RequestContext
 from django import VERSION as django_version
 
-from http import GET
+from .http import GET
 
 if django_version[:2] in ((1, 2), (1, 3,), (1, 4)):
     NAME = 'with_params'
