@@ -227,3 +227,12 @@ project page::
 
 Thanks to `django-cms <https://github.com/divio/django-cms/>`_ for the
 backported implementation of ``RequestFactory``.
+
+----
+
+Changelog
+---------
+
+v0.2.4
+^^^^^^
+Make the ``uturn`` template tag work a bit more as expected.

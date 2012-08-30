@@ -33,14 +33,15 @@ class UturnTemplateTagTest(TestCase):
         uturn = Template("{% load uturn %}{% uturn " + NAME + " 'hi' %}")
         url = Template("{% load uturn %}{% url " + NAME + " 'hi' %}")
         c = RequestContext(GET())
-        self.assertEqual(url.render(c), uturn.render(c))
+        self.assertEqual('/with-params/hi/?next=%2Fpath', uturn.render(c))
+        self.assertEqual('/with-params/hi/', url.render(c))
 
 
-    def test_override(self):
+    def test_no_override(self):
         uturn = Template("{% load uturn %}{% uturn " + NAME + " 'hi' %}")
         url = Template("{% load uturn %}{% url " + NAME + " 'hi' %}")
-        c = RequestContext(GET({'next': '/login'}))
-        self.assertEqual('/with-params/hi/?next=%2Flogin', uturn.render(c))
+        c = RequestContext(GET({'next': 'login'}))
+        self.assertEqual('/with-params/hi/?next=%2Fpath', uturn.render(c))
         self.assertEqual('/with-params/hi/', url.render(c))
 
 
