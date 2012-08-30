@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='django-uturn',
-    version='0.2.3',
+    version='0.2.4',
     author='Kevin Wetzels',
     author_email='kevin@roam.be',
     url='https://github.com/roam/django-uturn',
