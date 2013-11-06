@@ -37,12 +37,12 @@ class GetRedirectUrlTest(TestCase):
 
     def test_ok(self):
         request = GET({'next': '/nextone'})
-        self.assertEquals('/nextone', get_redirect_url(request))
+        self.assertEqual('/nextone', get_redirect_url(request))
 
     def test_ok_param_changed(self):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'uturn')
         request = GET({'uturn': '/nextone'})
-        self.assertEquals('/nextone', get_redirect_url(request))
+        self.assertEqual('/nextone', get_redirect_url(request))
 
     def test_relative_only(self):
         request = GET({'next': 'http://google.com'})
@@ -53,14 +53,14 @@ class GetRedirectUrlTest(TestCase):
     def test_whitelisted_domain(self):
         setattr(settings, 'UTURN_ALLOWED_HOSTS', ['google.com'])
         request = GET({'next': 'http://google.com'})
-        self.assertEquals('http://google.com', get_redirect_url(request))
+        self.assertEqual('http://google.com', get_redirect_url(request))
         # No prefix means google.com is interpreted as a path, not a domain
         request = GET({'next': 'google.com'})
         self.assertTrue(get_redirect_url(request) is None)
         # A protocol relative URL however, will have the domain compared
         # against our whitelist
         request = GET({'next': '//google.com'})
-        self.assertEquals('//google.com', get_redirect_url(request))
+        self.assertEqual('//google.com', get_redirect_url(request))
         request = GET({'next': '//agoogle.com'})
         self.assertTrue(get_redirect_url(request) is None)
         request = GET({'next': 'http://agoogle.com'})
@@ -105,7 +105,7 @@ class RedirectTestCase(TestCase):
 
     def normal(self, method=GET):
         request = method()
-        self.assertEquals('/default', self.redirect(request, '/default'))
+        self.assertEqual('/default', self.redirect(request, '/default'))
 
     def normal_param_change(self, method=GET):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'uturn')
@@ -113,7 +113,7 @@ class RedirectTestCase(TestCase):
 
     def override(self, param='next', method=GET):
         request = method({param: '/other'})
-        self.assertEquals('/other', self.redirect(request, '/default'))
+        self.assertEqual('/other', self.redirect(request, '/default'))
 
     def override_param_change(self, method=GET):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'uturn')
@@ -121,9 +121,9 @@ class RedirectTestCase(TestCase):
 
     def relative_only(self, param='next', method=GET):
         request = method({param: 'http://google.com'})
-        self.assertEquals('/default', self.redirect(request, '/default'))
+        self.assertEqual('/default', self.redirect(request, '/default'))
         request = method({param: 'google.com'})
-        self.assertEquals('/default', self.redirect(request, '/default'))
+        self.assertEqual('/default', self.redirect(request, '/default'))
 
     def relative_only_param_changed(self, method=GET):
         setattr(settings, 'UTURN_REDIRECT_PARAM', 'uturn')
@@ -134,14 +134,14 @@ class RedirectTestCase(TestCase):
         setattr(settings, 'UTURN_ALLOWED_HOSTS', domains)
         for domain in domains:
             request = method({'next': 'http://' + domain})
-            self.assertEquals('http://' + domain, get_redirect_url(request))
+            self.assertEqual('http://' + domain, get_redirect_url(request))
             # No prefix means the domain is interpreted as a path, not a domain
             request = method({'next': domain})
             self.assertTrue(get_redirect_url(request) is None)
             # A protocol relative URL however, will have the domain compared
             # against our whitelist
             request = method({'next': '//' + domain})
-            self.assertEquals('//' + domain, get_redirect_url(request))
+            self.assertEqual('//' + domain, get_redirect_url(request))
             request = method({'next': '//a' + domain})
             self.assertTrue(get_redirect_url(request) is None)
             request = method({'next': 'http://a' + domain})
