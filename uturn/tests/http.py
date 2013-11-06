@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.test import TestCase
+from unittest import TestCase
 from django.conf import settings
 from django.test.client import RequestFactory
 
