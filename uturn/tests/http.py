@@ -2,11 +2,7 @@
 from __future__ import unicode_literals
 from django.test import TestCase
 from django.conf import settings
-try:
-    # When running Django 1.3+
-    from django.test.client import RequestFactory
-except ImportError:
-    from request_factory import RequestFactory
+from django.test.client import RequestFactory
 
 from ..http import get_redirect_url, smart_redirect, SmartHttpResponseRedirect
 

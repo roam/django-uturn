@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from django import template, VERSION as django_version
+from django import template
 from django.template.defaulttags import URLNode
 from django.utils.http import urlencode
 from django.utils.html import conditional_escape
@@ -144,13 +144,6 @@ def _do_uturn_param(request):
     return ''
 
 
-# This is ugly stuff, but if this is all it takes to support Django 1.2, it'll
-# have to do.
-if django_version[:2] == (1, 2):
-    @register.simple_tag
-    def uturn_param(request):
-        return _do_uturn_param(request)
-else:
-    @register.simple_tag(takes_context=True)
-    def uturn_param(context):
-        return _do_uturn_param(context.get('request', None))
+@register.simple_tag(takes_context=True)
+def uturn_param(context):
+    return _do_uturn_param(context.get('request', None))

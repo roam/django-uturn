@@ -24,8 +24,8 @@ django-uturn is available on Pypi::
 
     pip install django-uturn
 
-Uturn is currently tested against Django versions 1.2, 1.3, 1.4 and the moving
-target called 1.5 (including Python 3.2).
+Uturn is currently tested against Django versions 1.4, 1.5 and 1.6 (including
+Python 3.2 and 3.3).
 
 .. image:: https://secure.travis-ci.org/roam/django-uturn.png?branch=master
 
@@ -222,7 +222,6 @@ project page::
         <a href="/projects/">cancel</a>
     </form>
 
-
 ----
 
 Thanks to `django-cms <https://github.com/divio/django-cms/>`_ for the
@@ -232,6 +231,11 @@ backported implementation of ``RequestFactory``.
 
 Changelog
 ---------
+
+v0.3.0
+^^^^^^
+Drop support for Django versions prior to 1.4 and verify support for Django
+1.5 and 1.6.
 
 v0.2.4
 ^^^^^^

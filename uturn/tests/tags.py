@@ -5,7 +5,7 @@ from django import VERSION as django_version
 
 from .http import GET
 
-if django_version[:2] in ((1, 2), (1, 3,), (1, 4)):
+if django_version[:2] == (1, 4):
     NAME = 'with_params'
 else:
     NAME = "'with_params'"

@@ -3,17 +3,18 @@ from distutils.core import setup
 
 setup(
     name='django-uturn',
-    version='0.2.4',
+    version='0.3.0',
     author='Kevin Wetzels',
     author_email='kevin@roam.be',
     url='https://github.com/roam/django-uturn',
+    install_requires=['django>=1.4'],
     packages=['uturn', 'uturn.templatetags'],
     license='BSD licence, see LICENCE',
     description='Overriding redirects in Django, to return where you came '\
                 'from',
     long_description=open('README.rst').read(),
     classifiers = [
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
@@ -21,5 +22,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
    ],
 )
