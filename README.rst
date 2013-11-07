@@ -164,15 +164,6 @@ Change that to this::
         <input type="submit" value="Save">
     </form>
 
-**Note:** if you're using **Django 1.2**, you will have to pass the request::
-
-    <form action="." method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        {% uturn_param request %}
-        <input type="submit" value="Save">
-    </form>
-
 Don't worry if you *don't* want to use ``next`` as the parameter. You can
 specify a custom parameter name with the ``UTURN_REDIRECT_PARAM`` setting. And
 if you want to redirect to other domains, you can specify those domains with
@@ -221,11 +212,6 @@ project page::
         <input type="submit" value="Save"> or
         <a href="/projects/">cancel</a>
     </form>
-
-----
-
-Thanks to `django-cms <https://github.com/divio/django-cms/>`_ for the
-backported implementation of ``RequestFactory``.
 
 ----
 

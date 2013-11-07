@@ -3,13 +3,13 @@ from setuptools import setup
 
 setup(
     name='django-uturn',
-    version='0.3.0',
+    version='0.3.1',
     author='Kevin Wetzels',
     author_email='kevin@roam.be',
     url='https://github.com/roam/django-uturn',
     install_requires=['Django>=1.4'],
     packages=['uturn', 'uturn.templatetags'],
-    license='BSD licence, see LICENCE',
+    license='BSD',
     description='Overriding redirects in Django, to return where you came '\
                 'from',
     long_description=open('README.rst').read(),
